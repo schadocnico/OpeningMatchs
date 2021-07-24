@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Basic Web Page</title>
+    </head>
+    <script>
+
+        function setCookie(cvalue, cname='code', exdays=1) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            let expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        } 
+
+        var p1 = Promise.resolve({
+            then: function(onFulfill, onReject) { onFulfill(prompt("What's your code?")); }
+        });
+        p1.then(function(v) {
+            var request = new XMLHttpRequest()
+            request.open('GET', 'http://localhost:8000/'+v, true)
+            request.onload = function () {
+                // Begin accessing JSON data here
+                var data = JSON.parse(this.response)
+
+                if (request.status >= 200 && request.status < 400) {
+                    console.log(data)
+                    setCookie(v)
+                    
+                } else {
+                    console.log(data)
+                }
+            }
+            request.send()
+
+        }, function(e) {
+            // n'est pas appelée
+        });
+
+        
+
+        
+    </script>        
+    <body>
+        <button type="button" onclick=window.location.href='http://localhost:8000/view/matchs/' >Go to matchs</button>  
+    </body>
+</html>

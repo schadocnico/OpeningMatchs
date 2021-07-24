@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Basic Web Page</title>
+    </head>
+    <script>
+
+        var request = new XMLHttpRequest()
+
+        request.open('GET', 'http://localhost:8000/match/', true)
+        request.onload = function () {
+            // Begin accessing JSON data here
+            var data = JSON.parse(this.response)
+
+            if (request.status >= 200 && request.status < 400) {
+                    data.forEach(element => {
+                        console.log(element);
+                        let div = document.createElement('div');
+                        div.id = 'listmatchs';
+                        div.innerHTML = '<p>' + "ID : " + element.idmatch + " ; " + element.op1 + " VS " + element.op2 + '</p>' +
+                         ' <button type="button" onclick="window.location.href=\'http://localhost:8000/view/match/?idmatch=' + element.idmatch + '\';" >Click Me!</button> ';
+                        
+                        document.getElementById('listeoutput').appendChild(div)
+                    });
+            } else {
+                console.log('error')
+            }
+        }
+
+        request.send()
+
+        
+    </script>        
+    <body>
+        <button type="button" onclick=window.location.href='http://localhost:8000/' >Revenir en arriere</button>
+        <button type="button" onclick=window.location.href='http://localhost:8000/view/resultatsOngoing/' >En cours</button>
+        <button type="button" onclick=window.location.href='http://localhost:8000/view/resultats/' >Classement</button>
+        <ol id="listeoutput">
+
+        </ol>
+    </body>
+</html>
