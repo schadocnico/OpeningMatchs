@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Basic Web Page</title>
+    </head>
+    <script>
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        
+
+        
+    </script>   
+    <body>
+        <button type="button" onclick=window.location.href='http://localhost:8000/update/' >Update</button>
+        <button type="button" onclick=window.location.href='http://localhost:8000/save/' >Save</button>
+        <div id="buttonoutput">
+
+        </div>
+    </body>
+    <script>
+        var div = document.createElement('div');
+        div.id = 'buttonCalcule';
+        div.innerHTML = "<button type=\"button\" onclick=window.location.href='http://localhost:8000/calcule/" +getCookie("code")+"' >Calcule</button>"
+        document.getElementById('buttonoutput').appendChild(div)
+    </script>
+</html>

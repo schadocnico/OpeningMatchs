@@ -45,6 +45,11 @@ router
     });
 
 router
+    .get('/admin/', function(req, res) {
+        res.sendFile(__dirname + "/" + "views/admin.html");
+    });
+
+router
     .get('/resultatsOngoing/', function(req, res) {
         res.status(201);
         res.json(data.getResultatsOngoing());
@@ -78,6 +83,19 @@ router
     .get('/update/', function(req, res) {
         res.status(201);
         res.json(data.update());
+    });
+
+router
+    .get('/calcule/:code', function(req, res) {
+        let resultat = data.calcule(req.params.code)
+        if(resultat == 200){
+            res.status(resultat)
+            res.json("OK");
+        } else {
+            res.status(resultat)
+            res.json("FDP c pas nico");
+        }
+        
     });
 
 router

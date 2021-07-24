@@ -1,4 +1,4 @@
-module.exports = {getPersonne, getMatch, allMatchs, getMatchDetaille, getResultats, addVote, save, update, getResultatsOngoing}
+module.exports = {getPersonne, getMatch, allMatchs, getMatchDetaille, getResultats, addVote, save, update, getResultatsOngoing, calcule}
 const fs = require('fs');
 
 let personnes=[];
@@ -14,6 +14,38 @@ let matchs=[
     {idmatch:0, id1:0, id2:1, votes1: [], votes2: []},
     {idmatch:1, id1:1, id2:0, votes1: [], votes2: []},
 ]
+
+function calcule(code) {
+    personne = personnes.find(p => p.code == code)
+    if (personne.id != 0){
+        return 401
+    }
+
+    matchs.forEach(match => {
+        let op1 = openings.find(p => p.id== match.id1);
+        let op2 = openings.find(p => p.id== match.id2);
+        let votes1 = match.votes1.length
+        let votes2 = match.votes2.length
+
+        if(votes1 > votes2){
+            op1.points += 1
+        }
+        else{
+            if(votes1 < votes2){
+                op2.points += 1
+            } else{
+                op1.points += 0.5
+                op2.points += 0.5
+            }
+        }
+        
+        
+    });
+
+
+    return 200
+
+}
 
 function save() {
     let data1 = JSON.stringify(personnes);
@@ -53,12 +85,16 @@ function addVote(idmatch, idop, code) {
     if (!match){
         return 301
     }
+    let idpersonne = personnes.find(p => p.code == code).id
+    if (match.votes1.includes(idpersonne) || match.votes2.includes(idpersonne)){
+        return 301
+    }
     if(match.id1 == idop){
-        match.votes1.push(personnes.find(p => p.code == code).id)
+        match.votes1.push(idpersonne)
         console.log(matchs)
         return 200
     } else if (match.id2 == idop){
-        match.votes2.push(personnes.find(p => p.code == code).id)
+        match.votes2.push(idpersonne)
         console.log(matchs)
         return 200
     } else{
